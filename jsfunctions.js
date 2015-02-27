@@ -82,4 +82,82 @@ function Tour(el) {
 }
 $(document).ready(function() {
   var paris = new Tour($('#paris'));
+  var london = new Tour($('#london'));
 });
+
+
+$(document).ready(function() {
+  $('form').on("submit", function(event){
+  	event.preventDefault();
+  })
+});
+
+
+$(document).ready(function() {
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    $.ajax('/book', {
+      type: 'POST',
+      data: $('form').serialize()
+    })
+  });
+});
+
+$(document).ready(function() {
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    $.ajax('/book', {
+      type: 'POST',
+      data: $('form').serialize(),
+      success: function(result){
+      	$('form').remove();
+        $('.tour').html(result);
+      }
+    });
+  });
+});
+
+$(document).ready(function() {
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    var form = $(this);
+    $.ajax('/book', {
+      type: 'POST',
+      data: $('form').serialize(),
+      dataType: 'json',
+      success: function(result) {
+        form.remove();
+        var msg = $('<p></p>');
+        msg.append("Description: " + result.description + " for " + result.nights + " nights");
+        $('.tour').html(msg);
+      }
+    });
+  });
+});
+
+//Remove hardcoded url and type
+//
+$(document).ready(function() {
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    var form = $(this);
+    $.ajax($('form').attr('action'), {
+      type: $('form').attr('method'),
+      data: $('form').serialize(),
+      dataType: 'json',
+      success: function(response) {
+        $('.tour').html('<p></p>')
+                  .find('p')
+                  .append('Trip to ' + response.description)
+                  .append(' at $' + response.price)
+                  .append(' for ' + response.nights + ' nights')
+                  .append('. Confirmation: ' + response.confirmation);
+      }
+    });
+  });
+});
+
+
+
+
+
