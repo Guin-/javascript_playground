@@ -273,6 +273,123 @@ $(document).ready(function(){
   });
 });
 
+// Creating a plugin
+$.fn.photofy = function(){
+  console.log(this);
+  }
+
+$(document).ready(function() {
+	$('.tour').photofy();
+});
+
+// Iterate with each
+$.fn.photofy = function() {
+  this.each(function(){
+  	console.log(this);
+  })
+}
+
+$(document).ready(function() {
+  $('.tour').photofy();
+});
+
+$.fn.photofy = function() {
+  this.each(function() {
+    var tour = $(this);
+    var show = function(e) {
+      e.preventDefault();
+      tour.addClass('is-showing-photofy');
+    }
+      tour.on('click.photofy', '.see-photos', show)
+    })
+  };
+
+
+$(document).ready(function() {
+  $('.tour').photofy();
+});
+
+// Using $.extend()
+$.fn.photofy = function(options) {
+  this.each(function() {
+    var settings = $.extend({count: 3, tour: $(this)}, options);
+    var show = function(e) {
+      e.preventDefault();
+      settings.tour
+               .addClass('is-showing-photofy')
+               .find('.photos')
+               .find('li:gt('+(settings.count-1)+')').hide();
+     }
+
+     settings.tour.on('click.photofy', '.see-photos', show);
+  });
+}
+
+$(document).ready(function() {
+  $('.tour').photofy({ count: 1});
+});
+
+$.fn.photofy = function(options) {
+  this.each(function() {
+    var show = function(e) {
+      e.preventDefault();
+      settings.tour
+              .addClass('is-showing-photofy')
+              .find('.photos')
+              .find('li:gt('+(settings.count-1)+')')
+              .hide();
+    }
+    var settings = $.extend({
+      count: 3,
+      tour: $(this)
+    }, options);
+    settings.tour.on('click.photofy', '.see-photos', show);
+    settings.tour.on('show.photofy', show);
+  });
+}
+
+$(document).ready(function() {
+  $('.tour').photofy({ count: 1});
+
+  $('.show-photos').on('click', function(e) {
+    e.preventDefault();
+    $('.tour').trigger('show.photofy');
+  });
+});
+
+// Internal Triggers
+$.fn.photofy = function(options) {
+  this.each(function() {
+    var remove = function(e){
+    e.preventDefault();
+    settings.tour.fadeOut().off('.photofy');
+    }
+    var show = function(e) {
+      e.preventDefault();
+      settings.tour
+              .addClass('is-showing-photofy')
+              .find('.photos')
+              .find('li:gt('+(settings.count-1)+')')
+              .hide();
+    }
+    var settings = $.extend({
+      count: 3,
+      tour: $(this)
+    }, options);
+    settings.tour.on('click.photofy', '.see-photos', show);
+    settings.tour.on('show.photofy', show);
+    settings.tour.on('click.photofy', '.hide-tour', remove);
+  });
+}
+
+$(document).ready(function() {
+  $('.tour').photofy({ count: 1});
+
+  $('.show-photos').on('click', function(e) {
+    e.preventDefault();
+    $('.tour').trigger('show.photofy');
+  });
+});
 
 
 
