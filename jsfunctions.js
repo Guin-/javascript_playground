@@ -392,4 +392,92 @@ $(document).ready(function() {
 });
 
 
+// PROMISES //
+// Reusable AJAX
+
+Vacation = {
+  getPrice: function(location){
+  var promise = $.ajax('/vacation/prices', {
+      data: {q: location},
+      success: function(result){
+        $('.price').text(result.price);
+      }})
+   return promise;
+  }
+}
+
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var location = $('.location').text();
+    Vacation.getPrice(location).done(function(result){
+    	$('.price').text(result.price);
+    })
+  });
+});
+
+// Create custom promise using $.Deferred()
+var Vacation = {
+  getPrice: function(location){
+   var promise = $.Deferred();
+   $.ajax('/vacation/prices', {
+     data: {q: location},
+     success:function(result){
+     	promise.resolve(result.price)
+     }
+   });
+   return promise;
+  }
+}
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var location = $('.location').text();
+    Vacation.getPrice(location).done(function(result){
+    	$('.price').text(result);
+    })
+  });
+});
+
+// Add an error handler using promise.reject()
+var Vacation = {
+  getPrice: function(location){
+    var promise = $.Deferred();
+    $.ajax('/vacation/prices', {
+      data: {q: location},
+      success: function(result){
+        promise.resolve(result.price);
+      },
+      error: function(){
+        var error = 'invalid location';
+        promise.reject(error);
+      }
+    });
+    return promise;
+  }
+}
+
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var location = $('.location').text();
+    Vacation.getPrice(location).done(function(result){
+      $('.price').text(result)})
+      .fail(function(error){
+      	console.log(error);
+    });
+  });
+});
+
+// Using $.when().then() to ensure multiple calls are rendered in the html at the same time.
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var tour = $(this).parent();
+    var location = tour.data('location');
+    var resultDiv = tour.find('.results').empty();
+    $.when(Vacation.getPrice(location),
+           Photo.getPhoto(location)
+    ).then(function(priceResult, photoResult){
+      $('<p>$'+priceResult+'</p>').appendTo(resultDiv);
+      $('<img />').attr('src', photoResult).appendTo(resultDiv);
+    });
+  });
+});
 
