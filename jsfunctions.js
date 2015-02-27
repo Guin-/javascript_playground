@@ -157,6 +157,121 @@ $(document).ready(function() {
   });
 });
 
+//using $.each
+$('button').on('click', function() {
+  $.ajax('/cities/deals', {
+    success: function(result) {
+      $.each(result, function(index, dealItem){
+      	return console.log(dealItem);
+      })
+    }
+  });
+});
+
+$('button').on('click', function() {
+  $.ajax('/cities/deals', {
+    success: function(result) {
+      $.each(result, function(index, dealItem) {
+        var deal = $(".deal-" + index);
+        deal.find('h3').html(dealItem.name);
+        deal.find('p').html(dealItem.price);
+      });
+    }
+  });
+});
+
+
+// use $.getJSON
+$('button').on('click', function() {
+  $.getJSON('/cities/deals', function(result) {
+      $.each(result, function(index, dealItem) {
+        var dealElement = $('.deal-' + index);
+        dealElement.find('.name').html(dealItem.name);
+        dealElement.find('.price').html(dealItem.price);
+      });
+    })
+  });
+
+// using $.map()
+$('.update-available-flights').on('click', function() {
+  $.getJSON('/flights/late', function(result) {
+    $.map(result, function(flight, index){
+    	return console.log(flight);
+    })
+  });
+});
+
+$('.update-available-flights').on('click', function() {
+  $.getJSON('/flights/late', function(result) {
+    var flightElements = $.map(result, function(flightItem, index){
+    var listItem = $('<li> </li>');
+    listItem.append(flightItem.flightNumber + " " + flightItem.time);
+    return listItem;
+    });
+    $('.flight-times').html(flightElements);
+  });
+});
+
+//using detach();
+$('.update-available-flights').on('click', function() {
+  $.getJSON('/flights/late', function(result) {
+    var flightElements = $.map(result, function(flightItem, index){
+      var flightEl = $('<li>'+flightItem.flightNumber+'-'+flightItem.time+'</li>');
+      return flightEl;
+    });
+    $('.flight-times').detach()
+    				.html(flightElements)
+    				.appendTo('.flights');
+  });
+});
+
+
+$(document).ready(function(){
+  // Get Weather
+  $('button').on('click', function() {
+    var results = $(this).closest('li').find('.results');
+    results.append('<p>Weather: 74&deg;</p>');
+    $(this).off('click');
+  });
+});
+
+// Namespacing event handlers
+$(document).ready(function(){
+  // Get Weather
+  $('button').on('click.weather', function() {
+    var results = $(this).closest('li').find('.results');
+    results.append('<p>Weather: 74&deg;</p>');
+    $(this).off('click.weather');
+  });
+
+   // Show Photos
+  $('button').on('click.photos', function() {
+    var tour = $(this).closest('li');
+    var results = tour.find('.results');
+    results.append('<p><img src="/assets/photos/'+tour.data('loc')+'.jpg" /></p>');
+    $(this).off('click.photos');
+  });
+  $('button').trigger('click');
+});
+
+// Using custom events
+$(document).ready(function(){
+  // Get Weather
+  $('button').on('show.weather', function() {
+    var results = $(this).closest('li').find('.results');
+    results.append('<p>Weather: 74&deg;</p>');
+    $(this).off('click.weather');
+  });
+
+  // Show Photos
+  $('button').on('click.photos', function() {
+    var tour = $(this).closest('li');
+    var results = tour.find('.results');
+    results.append('<p><img src="/assets/photos/'+tour.data('loc')+'.jpg" /></p>');
+    $(this).off('click.photos');
+    $(this).trigger('show.weather');
+  });
+});
 
 
 
