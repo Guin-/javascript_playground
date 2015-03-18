@@ -1,0 +1,10 @@
+Asynchronous Programming Techniques In Node
+
+Models for managing response logic:
+
+Callbacks
+- define logic for one off responses
+
+Event Listeners
+- callbacks that are associated with a conceptual entity(event).
+
