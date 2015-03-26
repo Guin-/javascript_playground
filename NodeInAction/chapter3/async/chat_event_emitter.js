@@ -6,13 +6,13 @@ channel.clients = {};
 channel.subscriptions = {};
 
 channel.on('join', function(id, client) {
-    this.clients[id] = client;
-    this.subscriptions[id] =  function(senderId, message) {
+    channel.clients[id] = client;
+    channel[id] =  function(senderId, message) {
         if (id != senderId) {
-            this.clients[id].write(message);
+            channel.clients[id].write(message);
         }
     }
-    this.on('broadcast', this.subscriptions[id]);
+    channel.on('broadcast', channel.subscriptions[id]);
 });
 
 var server = net.createServer(function(client) {
