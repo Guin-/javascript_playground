@@ -17,9 +17,8 @@ channel.on('join', function(id, client) {
 
 channel.on('leave', function(id){
     channel.removeListener(
-        'broadcast', channel.subscriptions[id];
-        channel.emit('broadcast', id, id + ' has left the chat\n');
-    )
+        'broadcast', this.subscriptions[id]);
+    channel.emit('broadcast', id, id + ' has left the chat\n');
 });
 
 // Causes channel participants to be kicked off of the chat
@@ -62,13 +61,5 @@ var server = net.createServer(function(client) {
 });
 
 server.listen(8888);
-
-/*
-channel.on('leave', function(id){
-    channel.removeListener(
-        'broadcast', channel.subscriptions[id];
-        channel.emit('broadcast', id, id + ' has left the chat\n');
-    )
-});
 
 
